@@ -5,16 +5,17 @@ import './index.css';
 function Square(props) {
     return (
         <button className="square" onClick={props.onClick}>
-            {this.props.value}
+            {props.value}
         </button>
     );
 }
-  
+
 class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             squares: Array(9).fill(null),
+            whoseTurn: 'X',
         };
     }
 
@@ -27,13 +28,45 @@ class Board extends React.Component {
     }
 
     handleClick(i) {
+        const turn = this.state.whoseTurn;
         const squares = this.state.squares.slice();
-        squares[i] = 'X';
-        this.setState({ squares: squares });
+        if (squares[i] || this.checkWinner()) { return; }
+        squares[i] = turn;
+        this.setState({ squares: squares, whoseTurn: turn === 'X' ? 'O' : 'X' });
+    }
+    
+    checkWinner() {
+        var s = this.state.squares;
+        for(var j=0; j<3; j++) {
+            if(s[3*j] != null && s[3*j] === s[3*j+1] && s[3*j+1] === s[3*j+2]){
+                return s[3*j];
+            }
+            else if(s[j] != null && s[j] === s[j+3] && s[j+3] === s[j+6]) {
+                return s[j];
+            }
+        }
+
+        if(s[0] != null && s[0] === s[4] && s[4] === s[8]) {
+            return s[0];
+        }
+        if(s[2] != null && s[2] === s[4] && s[4] === s[6]) {
+            return s[2];
+        }
+
+        return null;
+    }
+
+    renderWinner() {
+        const winner = this.checkWinner();
+        console.log(winner);
+        if (winner) {
+            return <span>Winner: {winner}</span>;
+        }
+        return <span>Test</span>;
     }
 
     render() {
-      const status = 'Next player: X';
+      const status = 'Next player: ' + this.state.whoseTurn;
   
       return (
         <div>
@@ -53,6 +86,7 @@ class Board extends React.Component {
             {this.renderSquare(7)}
             {this.renderSquare(8)}
           </div>
+          <div>{this.renderWinner()}</div>
         </div>
       );
     }
