@@ -2,7 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Square(props) {
+enum Player { 
+  X = 'X', 
+  O = 'O',
+};
+
+interface ButtonProps {
+  value: Player;
+  onClick: () => void;
+  index: number;
+}
+
+interface BoardState {
+  squares: Player[];
+  whoseTurn: Player;
+}
+
+function Square(props: ButtonProps) {
     return (
         <button className="square" onClick={props.onClick}>
             {props.value}
@@ -10,16 +26,16 @@ function Square(props) {
     );
 }
 
-class Board extends React.Component {
-    constructor(props) {
+class Board extends React.Component<{}, BoardState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             squares: Array(9).fill(null),
-            whoseTurn: 'X',
+            whoseTurn: Player.X,
         };
     }
 
-    renderSquare(i) {
+    renderSquare(i: number) {
       return (
         <Square index={i}
                 value={this.state.squares[i]}
@@ -27,12 +43,12 @@ class Board extends React.Component {
       );
     }
 
-    handleClick(i) {
+    handleClick(i: number) {
         const turn = this.state.whoseTurn;
         const squares = this.state.squares.slice();
         if (squares[i] || this.checkWinner()) { return; }
         squares[i] = turn;
-        this.setState({ squares: squares, whoseTurn: turn === 'X' ? 'O' : 'X' });
+        this.setState({ squares: squares, whoseTurn: turn === Player.X ? Player.O : Player.X });
     }
     
     checkWinner() {
