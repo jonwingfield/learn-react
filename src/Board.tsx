@@ -1,5 +1,6 @@
 import React from 'react';
 import { Square } from './Square';
+import { Loaded } from './Loader';
 
 export enum Player { 
   X = 'X', 
@@ -11,8 +12,12 @@ interface BoardState {
   whoseTurn: Player;
 }
 
-export class Board extends React.Component<{}, BoardState> {
-  constructor(props: {}) {
+interface BoardProps {
+  symbol: string;
+}
+
+export class Board extends React.Component<Loaded<BoardProps, number>, BoardState> {
+  constructor(props: Loaded<BoardProps, number>) {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
@@ -77,6 +82,8 @@ export class Board extends React.Component<{}, BoardState> {
         {this.renderSquare(8)}
       </div>
       <div>{this.renderWinner()}</div>
+      <div>{this.props.symbol}: {this.props.data}</div>
     </div>);
   }
 }
+
