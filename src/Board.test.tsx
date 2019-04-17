@@ -8,7 +8,7 @@ import { Square, ButtonProps } from './Square';
 describe("Board", () => {
     let board: ShallowWrapper<Board>;
     beforeEach(() => {
-        board = shallow(<Board />);
+        board = shallow(<Board symbol="MSFT" data={1} />);
     })
 
     const square = (offset: number) => board.find(Square).at(offset).props();
